@@ -1,0 +1,31 @@
+# AVA — never commit a real engagement scope or run output
+scope.yaml
+output/
+report.md
+report.html
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# Tooling caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Editors / OS
+.DS_Store
+.idea/
+.vscode/
+
+# Local Claude Code settings (keep the shared skill, ignore local prefs)
+.claude/settings.local.json

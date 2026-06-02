@@ -1,0 +1,42 @@
+# AVA scope definition — copy to scope.yaml and edit before running.
+#
+# The authorization gate REQUIRES this file. The target you pass with
+# --target must match an entry under `allowed_hosts`, or the tool refuses
+# to run. Every individual request is re-checked against this scope at the
+# HTTP layer, including redirects.
+
+# Hosts the tool is permitted to contact. Exact host match (host[:port]).
+# A leading "*." permits subdomains of that domain.
+allowed_hosts:
+  - example.com
+  - www.example.com
+  - "*.staging.example.com"
+
+# Optional path allow-list. If present, only URLs whose path starts with one
+# of these prefixes are scanned. Omit or leave empty to allow all in-scope
+# paths.
+allowed_paths:
+  - /
+  # - /app
+  # - /api
+
+# Optional path deny-list. Takes precedence over allowed_paths. Use for
+# fragile endpoints, logout links, or anything you must not touch.
+denied_paths:
+  - /logout
+  - /admin/delete
+  - /billing
+
+# Optional: hosts/paths that may be referenced but must NEVER be requested
+# (e.g. third-party auth providers). Belt-and-suspenders on top of host scope.
+hard_deny_hosts:
+  - accounts.google.com
+  - login.microsoftonline.com
+
+# Engagement metadata — recorded in the run's audit log.
+engagement:
+  name: "Example Corp Q2 assessment"
+  authorized_by: "jane.doe@example.com"
+  ticket: "SEC-1234"
+  window_start: "2026-06-01T00:00:00Z"
+  window_end: "2026-06-30T23:59:59Z"

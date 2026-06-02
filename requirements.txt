@@ -1,0 +1,15 @@
+# AVA — Authorized Vulnerability Assessor
+# Core HTTP + parsing
+httpx>=0.27.0
+beautifulsoup4>=4.12.0
+lxml>=5.2.0
+PyYAML>=6.0.1
+
+# Headless browser crawl / DOM sink identification (wrapped engine)
+playwright>=1.44.0
+
+# TLS configuration analysis (wrapped engine)
+sslyze>=6.0.0
+
+# Reporting: hand-rolled Markdown/HTML (no template engine dependency).
+
