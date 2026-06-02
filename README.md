@@ -123,7 +123,7 @@ Active checks prove exploitability without causing harm:
 ### Install
 
 ```bash
-git clone https://github.com/<your-username>/ava.git
+git clone https://github.com/mdAqibb/AVA.git
 cd ava
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
