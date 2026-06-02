@@ -35,6 +35,7 @@ skip the repetitive first pass and focus on deep manual testing.
 - [Wrapped vs. custom](#wrapped-vs-custom)
 - [Extending AVA](#extending-ava)
 - [Testing](#testing)
+- [Validation: an example run](#validation-an-example-run)
 - [Limitations](#limitations)
 - [License](#license)
 
@@ -485,6 +486,37 @@ integrity), passive + active detection logic (with negative controls), the
 destructive-payload guard, triage/reporting, concurrency, and the four resume
 paths. It runs **without** `httpx`/`playwright`/`sslyze` installed — checks are
 exercised against mock clients and responses.
+
+---
+
+## Validation: an example run
+
+AVA was run end-to-end (over real HTTP, via `httpx`) against a local,
+deliberately-vulnerable DVWA-style test app to validate the full pipeline — not
+just the unit-tested detection logic. The run produced **20 findings**,
+correctly scored and ranked:
+
+| Severity | Count | Examples |
+|----------|-------|----------|
+| Critical | 3 | SSTI (`{{919*919}}` → `844561`), OS command injection (echoed marker), SQL injection (error-based) — all **Confirmed** |
+| Medium | 13 | Reflected XSS ×3 (Confirmed), SSRF candidates, IDOR candidates, open redirect (Confirmed), version disclosure, missing CSRF token, missing CSP / X-Frame-Options / SameSite |
+| Low | 4 | Cookie `Secure`/`HttpOnly` missing, `X-Content-Type-Options`, `Referrer-Policy` |
+
+Each finding rendered with its CVSS v3.1 vector/score, CWE, OWASP category,
+exact location, a **redacted request/response reproduction**, root cause,
+impact, and Python + Node remediation.
+
+What the run demonstrated about the safety design:
+
+- **Scope containment held live.** The open-redirect probe made the app return
+  `302 → https://ava-redirect-canary.invalid/…`; AVA logged *"Stopping at
+  off-scope redirect (not followed)"* — it flagged the vulnerability **without**
+  ever requesting the off-scope host.
+- **No false positives.** Stored XSS was not flagged (the app doesn't persist
+  input), and HSTS was not flagged (correct — the target was plain HTTP).
+- **Honest coverage boundary.** A CORS-misconfigured endpoint that wasn't linked
+  from any page went undiscovered — AVA tests only what the crawler can reach
+  (there is no forced-browse wordlist yet; see [Limitations](#limitations)).
 
 ---
 
